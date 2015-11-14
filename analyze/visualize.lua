@@ -6,8 +6,14 @@ require("cunn")
 ffi = require("ffi")
 
 function main()
-layer_id =21
-obj = torch.load('../train_yelp/extracted_layer_'..layer_id..'.t7b')
+--layer_id =21
+--print(table.getn(arg))
+if table.getn(arg) < 2 then
+	error('The input format should be:\n visualize.lua DATAFILE NUM_SAMPLE')
+end
+print(arg[1])
+print(arg[2])
+obj = torch.load(arg[1])
 source  = torch.load('../data/yelp_part_test.t7b')
 
 
@@ -17,14 +23,20 @@ source  = torch.load('../data/yelp_part_test.t7b')
 --print(source.)
 --text = source[{:,2}]
 --rating = source[{}]
-sp=100
-cls_n=5
+sp=tonumber(arg[2])
+cls_n=2
 f = obj.features:double()
+print(f:size())
 f = f[{{1,sp},{}}]
+
+if f:dim()>2 then
+	f=f:reshape(sp,f:size(2)*f:size(3))
+end
 l = obj.labels:double()
+print(l:size())
 l = l[{{1,sp}}]
 print(f:size())
-print(l:size())
+
 inputs,labels,n = parse_data(source,sp)
 -- check consistency
 if n~=sp then
@@ -39,7 +51,8 @@ for i=1,sp do
 end
 print(inputs[1])
 --os.exit()
-p = m.embedding.tsne(f,{dim=2, perplexity=30})
+p = m.embedding.tsne(f,{dim=2, perplexity=20})
+
 class_points={}
 for i=1,cls_n do
 	class_points[i] = {}

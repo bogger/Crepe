@@ -10,12 +10,13 @@ local Extract = torch.class("Extract")
 -- data: Testing dataset
 -- model: Testing model
 -- config: (optional) the configuration table
-function Extract:__init(data,model)
+function Extract:__init(data,model,layer)
    
 
    -- Store the objects
    self.data = data
    self.model = model
+   self.layer = layer
    --self.loss = loss
 
    -- Move the type
@@ -49,11 +50,12 @@ function Extract:run()
       -- Forward propagation
       --print(self.output:size())
       --print(self.model:forward(self.batch):size())
+      self.model:forward(self.batch)
       if self.output[1]:numel()==0 then
-         self.output[1] = self.model:forward(self.batch)
+         self.output[1] = self.model:extract(self.layer)
          self.output[2]= self.labels
       else
-         self.output[1] = torch.cat(self.output[1],self.model:forward(self.batch),2)
+         self.output[1] = torch.cat(self.output[1],self.model:extract(self.layer),1)
          self.output[2] = torch.cat(self.output[2],self.labels)
       end
       -- Record time

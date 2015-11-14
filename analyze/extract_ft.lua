@@ -10,8 +10,8 @@ require("cunn")
 require("gnuplot")
 
 -- Local requires
-require("../train/data")
-require("../train/model")
+require("data")
+require("model")
 require("extract")
 
 -- Configurations
@@ -94,13 +94,13 @@ function main.new()
    print("Loading the model...")
    -- only get first layer_id layers of the model
    print(main.layer_id)
-   if main.layer_id > 0 then
-      model_deduced ={}
-      for i=1,main.layer_id do
-         model_deduced[i] = config.model[i]
-      end
-      config.model = model_deduced
-   end
+   -- if main.layer_id > 0 then
+   --    model_deduced =config.model
+   --    for i=1,main.layer_id do
+   --       model_deduced[i] = config.model[i]
+   --    end
+   --    config.model = model_deduced
+   -- end
    main.model = Model(config.model)
 
    if config.main.randomize then
@@ -116,7 +116,7 @@ function main.new()
    -- Initiate the tester
    print("Loading the tester...")
    
-   main.extract = Extract(main.val_data, main.model)
+   main.extract = Extract(main.val_data, main.model,main.layer_id)
 
    -- The record structure
    main.record = {}
