@@ -150,10 +150,10 @@ function Data:iterator(static, data)
    end
 end
 
-function Data:stringToTensor(str, l, input, p)
+function Data:stringToTensor(str, l)
    local s = str:lower()
    local l = l or #s
-   local t = input or torch.Tensor(#self.alphabet, l)
+   local t = torch.Tensor(#self.alphabet, l)
    t:zero()
    for i = #s, math.max(#s - l + 1, 1), -1 do
       if self.dict[s:sub(i,i)] then
@@ -162,5 +162,52 @@ function Data:stringToTensor(str, l, input, p)
    end
    return t
 end
+function Data:stringToIndex(str, l)
+   local s = str:lower()
+   local l = l or #s
+   local t = torch.Tensor(l)
+   t:zero()
+   for i = #s, math.max(#s - l + 1, 1), -1 do
+      if self.dict[s:sub(i,i)] then
+      t[#s - i + 1] = self.dict[s:sub(i,i)]
+      end
+   end
+   return t
+end
+function Data:stringToWords(str, l)
+   local s = str:lower()
+   local l = l or #s
+   local m = torch.Tensor(l)
+   m:zero()
+   local wordsRange={}
+   local start=1
+   local tail
+   local w=0
+   --search for ! and ? and add them as words
+   for i = #s, math.max(#s - l + 1, 1), -1 do
+     
+      local b =string.byte(s:sub(i,i))
+      --print(torch.type(b))
+      if  b >= string.byte('a') and b<=string.byte('z') then
+         m[#s - i + 1] = 1
+      elseif s:sub(i,i)=='!' or s:sub(i,i)=='?' then
+         w=w+1
+         wordsRange[w] =  {#s-i+1,#s-i+1}
+      end
 
+   end
+   
+   while (start<=l) do
+      while (start<=l and m[start]==0) do start=start+1 end
+      tail=start
+      while (tail<=l and m[tail]==1) do tail=tail+1 end
+      if (start>l) then break end      
+      w=w+1
+      wordsRange[w] = {start, tail-1}
+      start = tail
+   end
+   
+
+   return wordsRange
+end
 return Data

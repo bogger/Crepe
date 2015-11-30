@@ -106,6 +106,7 @@ function Train:batchStep()
    -- Backward propagation   
    self.grads:zero()
    self.gradOutput = self.loss:backward(self.output,self.labels)
+    print(self.gradOutput:size())
    self.gradBatch = self.model:backward(self.batch,self.gradOutput)
    -- Record time
    if self.model:type() == "torch.CudaTensor" then cutorch.synchronize() end

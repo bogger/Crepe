@@ -35,6 +35,7 @@ function Model:extract(layer)
    local output = self.sequential:get(layer).output
    return output
 end
+
 -- Backward propagation
 function Model:backward(input, gradOutput)
    self.gradInput = self.sequential:backward(input, gradOutput)
