@@ -126,7 +126,7 @@ function Data:iterator(static, data)
 
       local inputs = inputs or torch.Tensor(self.batch_size, #self.alphabet, self.length)
       local labels = labels or torch.Tensor(inputs:size(1))
-
+      local idx = idx or torch.Tensor(self.batch_size,self.length)
       local n = 0
       for k = 1, inputs:size(1) do
 	 j = j + 1
@@ -143,17 +143,20 @@ function Data:iterator(static, data)
 	    s = s.." "..ffi.string(torch.data(data.content:narrow(1, data.index[i][j][l], 1)))
 	 end
 	 local data = self:stringToTensor(s, self.length, inputs:select(1, k))
+    local id = self:stringToIndex(s, self.length, idx:select(1, k))
 	 labels[k] = i
       end
-
-      return inputs, labels, n
+      if n==0 then
+         return
+      end
+      return inputs, idx, labels, n
    end
 end
 
-function Data:stringToTensor(str, l)
+function Data:stringToTensor(str, l, t)
    local s = str:lower()
    local l = l or #s
-   local t = torch.Tensor(#self.alphabet, l)
+   local t = t or torch.Tensor(#self.alphabet, l)
    t:zero()
    for i = #s, math.max(#s - l + 1, 1), -1 do
       if self.dict[s:sub(i,i)] then
@@ -162,10 +165,10 @@ function Data:stringToTensor(str, l)
    end
    return t
 end
-function Data:stringToIndex(str, l)
+function Data:stringToIndex(str, l, t)
    local s = str:lower()
    local l = l or #s
-   local t = torch.Tensor(l)
+   local t = t or torch.Tensor(l)
    t:zero()
    for i = #s, math.max(#s - l + 1, 1), -1 do
       if self.dict[s:sub(i,i)] then
@@ -190,9 +193,9 @@ function Data:stringToWords(str, l)
       --print(torch.type(b))
       if  b >= string.byte('a') and b<=string.byte('z') then
          m[#s - i + 1] = 1
-      elseif s:sub(i,i)=='!' or s:sub(i,i)=='?' then
-         w=w+1
-         wordsRange[w] =  {#s-i+1,#s-i+1}
+      --elseif s:sub(i,i)=='!' or s:sub(i,i)=='?' then
+        -- w=w+1
+        -- wordsRange[w] =  {#s-i+1,#s-i+1}
       end
 
    end

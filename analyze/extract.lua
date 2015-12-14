@@ -37,7 +37,7 @@ function Extract:run()
    self.output[2] = torch.CudaTensor()
    -- Start the loop
    self.clock = sys.clock()
-   for batch,labels,n in self.data:iterator() do
+   for batch,idx,labels,n in self.data:iterator() do
       self.batch = self.batch or batch:transpose(2,3):contiguous():type(self.model:type())
       self.labels = self.labels or labels:type(self.model:type())
       self.batch:copy(batch:transpose(2, 3):contiguous())

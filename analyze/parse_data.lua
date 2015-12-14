@@ -25,7 +25,7 @@ function parse_data(data)
 	 for l = data.index[i][j]:size(1) - 1, 1, -1 do
 	    s = s.." "..ffi.string(torch.data(data.content:narrow(1, data.index[i][j][l], 1)))
 	 end
-	 inputs[n] = s
+	 inputs[n] = s:lower()
 	 labels[n] = i
 	 
       end

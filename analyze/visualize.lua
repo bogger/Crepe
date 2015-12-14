@@ -37,7 +37,8 @@ l = obj.labels:double()
 print(l:size())
 l = l[{{1,sp}}]
 print(f:size())
-
+print(l[1])
+print(labels[1])
 
 -- check consistency
 
@@ -45,6 +46,7 @@ local i
 for i=1,sp do
 	if l[i]~=labels[i] then
 		error('labels are not match at '..i)
+
 		break
 	end
 end
@@ -56,8 +58,10 @@ class_points={}
 for i=1,cls_n do
 	class_points[i] = {}
 	class_points[i].values = {}
-	class_points[i].key =  "Class"..i
+	
 end
+class_points[1].key = 'Negative reviews'
+class_points[2].key = 'Positive reviews'
 for i=1,sp do
 	table.insert(class_points[l[i]].values,
      {

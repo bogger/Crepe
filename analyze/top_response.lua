@@ -48,7 +48,7 @@ for i=1,sp do
 		break
 	end
 end
-top_n = 5
+top_n = 10
 top_res = {}
 top_v = {}
 for i=1,filters do
