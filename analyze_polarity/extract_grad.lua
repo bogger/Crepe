@@ -12,8 +12,8 @@ require("gnuplot")
 -- Local requires
 require("data")
 require("model")
-require("extract")
-json=require("json")
+require("extract_g")
+
 -- Configurations
 dofile("config.lua")
 
@@ -47,19 +47,14 @@ function main.argparse()
    -- Options
    cmd:option("-resume",0,"Resumption point in epoch. 0 means not resumption.")
    cmd:option("-layer_id",0,"To extract features in layer[layer_id]")
-   cmd:option("-savename","","File name to be saved")
    cmd:text()
    
    -- Parse the option
    local opt = cmd:parse(arg or {})
    
    main.layer_id=opt.layer_id
-   if opt.savename=="" then
-     main.savename = "extracted_layer_"..tostring(main.layer_id)..".t7b"
-   else
-     main.savename= opt.savename
-   end   
--- Resumption operation
+   
+   -- Resumption operation
    if opt.resume > 0 then
       -- Find the main resumption file
       local files = main.findFiles(paths.concat(config.main.save,"main_"..tostring(opt.resume).."_*.t7b"))
@@ -121,7 +116,7 @@ function main.new()
    -- Initiate the tester
    print("Loading the tester...")
    
-   main.extract = Extract(main.val_data, main.model,main.layer_id)
+   main.extract = ExtractGrad(main.val_data, main.model)
 
    -- The record structure
    main.record = {}
@@ -168,8 +163,9 @@ function main.save()
 
    -- Make the save
    local time = os.time()
-   torch.save(paths.concat(config.main.save, main.savename),
+   torch.save(paths.concat(config.main.save,"extracted_grad.t7b"),
    {features = main.output[1], labels = main.output[2]});   
+   
    collectgarbage()
 end
 

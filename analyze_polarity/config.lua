@@ -20,7 +20,7 @@ config.train_data.batch_size = 128
 -- Validation data
 config.val_data = {}
 -- !!!!!!Path to the test data file
-config.val_data.file =  paths.concat(paths.cwd(), "../data/test_review_3month_2.t7b")
+config.val_data.file =  paths.concat(paths.cwd(), "../data/train_review_3month_2_no_repeat.t7b")
 config.val_data.alphabet = alphabet
 config.val_data.length = 1014
 config.val_data.batch_size = 200
@@ -90,7 +90,7 @@ config.main.epoches = 5000
 config.main.randomize = 5e-2
 config.main.dropout = true
 -- !!!!!!Path to the model folder
-config.main.save = '../train_yelp'--paths.concat(paths.cwd())
+config.main.save = '../train_yelp/3m_polarity'--paths.concat(paths.cwd())
 config.main.details = true
 config.main.device = 1
 config.main.collectgarbage = 100
