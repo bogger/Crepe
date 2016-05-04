@@ -8,8 +8,23 @@ require("data")
 require("model")
 require("extract")
 require 'hdf5'
-in_path = '../train_yelp/3m_polarity/train_score_3month_2.t7b'
-out_path = '../train_yelp/3m_polarity/train_score_3month_2.h5'
+local cmd = torch.CmdLine()
+
+-- Options
+cmd:option("-input","","input filename")
+cmd:option("-output","","output filename")
+cmd:text()
+   
+-- Parse the option
+local opt = cmd:parse(arg or {})
+if opt.input=="" then
+	error("input filename is not provided")
+end
+if opt.output=="" then
+	error("output filename is not provided")
+end
+in_path = opt.input
+out_path = opt.output
 data = torch.load(in_path)
 -- print(data)
 

@@ -13,7 +13,6 @@ require("gnuplot")
 require("data")
 require("model")
 require("extract")
-json=require("json")
 -- Configurations
 dofile("config.lua")
 
