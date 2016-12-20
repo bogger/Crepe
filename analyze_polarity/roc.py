@@ -22,6 +22,8 @@ labels = np.array(labels)
 scores = softmax(scores)
 score_sums = np.sum(scores,axis=1)
 pos_scores = scores[:,1]
+print pos_scores
+exit()
 labels = labels - 1#1-base to 0-base
 tot_n = len(labels)
 fpr, tpr,_ = roc_curve(labels, pos_scores)

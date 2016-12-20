@@ -12,18 +12,17 @@ local alphabet = "abcdefghijklmnopqrstuvwxyz0123456789-,;.!?:'\"/\\|_@#$%^&*~`+-
 
 -- Training data
 config.train_data = {}
-config.train_data.file = paths.concat(paths.cwd(), "../data/yelp_polarity_train.t7b")
+config.train_data.file = paths.concat(paths.cwd(), "../data/train_yelp.t7b")
 config.train_data.alphabet = alphabet
 config.train_data.length = 1014
 config.train_data.batch_size = 128
 
 -- Validation data
 config.val_data = {}
--- !!!!!!Path to the test data file
-config.val_data.file =  paths.concat(paths.cwd(), "../data/test_yelp_order.t7b")
+config.val_data.file =  paths.concat(paths.cwd(), "../data/test_yelp.t7b")
 config.val_data.alphabet = alphabet
 config.val_data.length = 1014
-config.val_data.batch_size = 2
+config.val_data.batch_size = 128
 
 -- The model
 config.model = {}
@@ -59,7 +58,7 @@ config.model[20] = {module = "nn.Linear", inputSize = 1024, outputSize = 1024}
 config.model[21] = {module = "nn.Threshold"}
 config.model[22] = {module = "nn.Dropout", p = 0.5}
 -- 1024
-config.model[23] = {module = "nn.Linear", inputSize = 1024, outputSize = 2}
+config.model[23] = {module = "nn.Linear", inputSize = 1024, outputSize = 14}
 config.model[24] = {module = "nn.LogSoftMax"}
 
 -- The loss
@@ -89,8 +88,7 @@ config.main.eras = 10
 config.main.epoches = 5000
 config.main.randomize = 5e-2
 config.main.dropout = true
--- !!!!!!Path to the model folder
-config.main.save = '../train_yelp/'--paths.concat(paths.cwd())
+config.main.save = paths.concat(paths.cwd())
 config.main.details = true
 config.main.device = 1
 config.main.collectgarbage = 100
